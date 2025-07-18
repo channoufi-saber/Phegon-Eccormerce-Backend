@@ -3,17 +3,25 @@ package com.phegondev.Phegon_Ecommerce.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.phegondev.Phegon_Ecommerce.dto.CategoryDto;
 import com.phegondev.Phegon_Ecommerce.dto.Response;
 import com.phegondev.Phegon_Ecommerce.entity.Category;
 import com.phegondev.Phegon_Ecommerce.exception.NotFoundException;
 import com.phegondev.Phegon_Ecommerce.mapper.EntityDtoMapper;
+import com.phegondev.Phegon_Ecommerce.repository.AddressRepo;
 import com.phegondev.Phegon_Ecommerce.repository.CategoryRepo;
 import com.phegondev.Phegon_Ecommerce.service.interf.CategoryService;
+import com.phegondev.Phegon_Ecommerce.service.interf.UserService;
 
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 	
-	private final CategoryRepo categoryRepo = null;
+	private final CategoryRepo categoryRepo ;
 	private final EntityDtoMapper entityDtoMapper = new EntityDtoMapper();
 	
 

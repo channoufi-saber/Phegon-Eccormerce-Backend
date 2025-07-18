@@ -33,32 +33,50 @@ public class UserServiceImpl implements UserService {
 	private final JwtUtils jwtUtils;
 	private final EntityDtoMapper entityDtoMapper;
 
-	@Override
-	public Response registerUser(UserDto registrationRequest) {
-		UserRole role = UserRole.USER;
-		if (registrationRequest.getRole() != null && registrationRequest.getRole().equalsIgnoreCase("admin")) {
-			role = UserRole.ADMIN;
-		}
+	 @Override
+	    public Response registerUser(UserDto registrationRequest) {
+	        UserRole role = UserRole.USER;
 
-		User user = User.builder().name(registrationRequest.getName()).email(registrationRequest.getEmail())
-				.password(registrationRequest.getPassword()).phoneNumber(registrationRequest.getPhoneNumber())
-				.role(role).build();
-		User savedUser = userRepo.save(user);
-		System.out.println(savedUser);
-		UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
+	        if (registrationRequest.getRole() != null && registrationRequest.getRole().equalsIgnoreCase("admin")) {
+	            role = UserRole.ADMIN;
+	        }
 
-		return Response.builder().status(200).message("User Successfully Added").user(userDto).build();
-	}
+	        User user = User.builder()
+	                .name(registrationRequest.getName())
+	                .email(registrationRequest.getEmail())
+	                .password(passwordEncoder.encode(registrationRequest.getPassword()))
+	                .phoneNumber(registrationRequest.getPhoneNumber())
+	                .role(role)
+	                .build();
 
-	@Override
-	public Response loginUser(LoginRequest loginRequest) {
-		User user=userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new NotFoundException("Email not found"));
-		if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-			throw new InvalidCredentialsException("Password does not match");
-		}
-		String token=jwtUtils.generateToken(user);
-		return Response.builder().message("User Successfully Logged In").token(token).expirationTime("6 Month").role(user.getRole().name()).build();
-	}
+	        User savedUser = userRepo.save(user);
+	        System.out.println(savedUser);
+
+	        UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
+	        return Response.builder()
+	                .status(200)
+	                .message("User Successfully Added")
+	                .user(userDto)
+	                .build();
+	    }
+
+	 @Override
+	    public Response loginUser(LoginRequest loginRequest) {
+
+	        User user = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new NotFoundException("Email not found"));
+	        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+	            throw new InvalidCredentialsException("Password does not match");
+	        }
+	        String token = jwtUtils.generateToken(user);
+
+	        return Response.builder()
+	                .status(200)
+	                .message("User Successfully Logged In")
+	                .token(token)
+	                .expirationTime("6 Month")
+	                .role(user.getRole().name())
+	                .build();
+	    }
 
 	@Override
 	public Response getAllUsers() {

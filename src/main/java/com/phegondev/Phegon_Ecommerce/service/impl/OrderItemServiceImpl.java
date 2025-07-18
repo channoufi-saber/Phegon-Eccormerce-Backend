@@ -68,7 +68,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 	}
 
 	@Override
-	public Response updateOrderItemStaus(Long orderItemId, String status) {
+	public Response updateOrderItemStatus(Long orderItemId, String status) {
 		OrderItem orderItem=orderItemRepo.findById(orderItemId).orElseThrow(()->new NotFoundException("Order Item not found"));
 		orderItem.setStatus(OrderStatus.valueOf(status.toUpperCase()));
 		orderItemRepo.save(orderItem);

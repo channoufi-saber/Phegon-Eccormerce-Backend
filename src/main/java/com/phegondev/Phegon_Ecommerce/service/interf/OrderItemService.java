@@ -10,7 +10,7 @@ import com.phegondev.Phegon_Ecommerce.enums.OrderStatus;
 
 public interface OrderItemService {
 	Response placeOrder(OrderRequest orderRequest);
-	Response updateOrderItemStaus(Long orderItemId,String status);
+	Response updateOrderItemStatus(Long orderItemId,String status);
 	Response filterOrderItems(OrderStatus status,LocalDateTime startDate,LocalDateTime endDate,Long itemId,Pageable pageable);
 
 }
